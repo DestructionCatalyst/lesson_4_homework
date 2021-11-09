@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <h2>All employees</h2>
+        <ul>
+            {% for employee in employees %}
+            <li>
+                <a href="employee?employee_id={{ employee.id }}">{{ employee.name }}, {{ employee.position }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="apply/"><input type="submit" value="Apply" /></a>
+    </body>
+</html>
