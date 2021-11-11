@@ -5,6 +5,7 @@ from application.settings import TEMPLATE_DIR
 from .models import Employees, Positions
 from .forms import ApplyForm
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods, require_GET
 
 
 def index(request):
@@ -14,6 +15,7 @@ def index(request):
                   {'title': 'All employees', 'employees': employees_list})
 
 
+@require_GET
 def employee_detail(request):
     try:
         employee_id = request.GET.get('employee_id')
@@ -26,6 +28,7 @@ def employee_detail(request):
                                               f'{employee.email}']})
 
 
+@require_http_methods(['POST', 'GET'])
 def apply(request):
     if request.method == 'POST':
         form = ApplyForm(request.POST)
@@ -35,7 +38,7 @@ def apply(request):
             new_employee['position'] = Positions.objects.get(pk=new_employee['position']).name
             Employees(**new_employee).save()
             return HttpResponseRedirect(reverse('employee_list'))
-    else:
+    elif request.method == 'GET':
         form = ApplyForm()
 
     return render(request, os.path.join(TEMPLATE_DIR, 'employees/apply.html'), {'title': 'Work with us', 'my_form': form})
